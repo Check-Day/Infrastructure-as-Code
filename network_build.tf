@@ -84,7 +84,7 @@ resource "aws_lb" "checkday_load_balancer" {
 }
 
 resource "aws_lb_target_group" "checkday_load_balancer_target_group" {
-  name     = "checkday-load-balancer-target-group"
+  name     = "checkday-lb-target-group"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.checkday_vpc.id
