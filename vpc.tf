@@ -14,7 +14,7 @@ resource "aws_vpc_ipam_pool" "checkday" {
 
 resource "aws_vpc_ipam_pool_cidr" "checkday" {
   ipam_pool_id = aws_vpc_ipam_pool.checkday.id
-  cidr         = "195.52.0.0/16"
+  cidr         = var.cidr
 }
 
 resource "aws_vpc" "checkday" {
@@ -28,4 +28,18 @@ resource "aws_vpc" "checkday" {
   tags = {
     Name = "checkday_dev"
   }
+}
+
+resource "aws_internet_gateway" "checkday_internet_gateway" {
+  vpc_id = aws_vpc.checkday.id
+
+  tags = {
+    Name = "checkday_internet_gateway"
+  }
+}
+
+variable "cidr" {
+  type        = string
+  default     = "10.1.0.0/16"
+  description = "CIDR Block for VPC"
 }
