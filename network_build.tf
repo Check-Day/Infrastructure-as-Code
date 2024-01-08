@@ -83,6 +83,26 @@ resource "aws_lb" "checkday_load_balancer" {
   }
 }
 
+resource "aws_lb_target_group" "checkday_load_balancer_target_group" {
+  name     = "checkday-load-balancer-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.checkday_vpc.id
+}
+
+resource "aws_lb_listener" "checkday_load_balancer_target_group_listener" {
+  load_balancer_arn = aws_lb.checkday_load_balancer.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.checkday_load_balancer_target_group.arn
+  }
+}
+
 resource "aws_db_subnet_group" "checkday_db_subnet_group" {
   name       = "checkday_db_subnet_group"
   subnet_ids = [for subnet in aws_subnet.checkday_private_subnet : subnet.id]
@@ -97,11 +117,55 @@ resource "aws_rds_cluster" "checkday_database" {
   engine                  = "aurora-mysql"
   engine_version          = "8.0.mysql_aurora.3.02.0"
   availability_zones      = var.availability_zones
-  database_name           = "mydb"
+  database_name           = var.database_name
   master_username         = var.database_username
   master_password         = var.database_password
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
+  final_snapshot_identifier = "checkday-db-final-snapshot-${formatdate("YYYYMMDDHHmmss", timestamp())}"
+}
+
+locals {
+  host = aws_rds_cluster.checkday_database.endpoint
+  database_username = var.database_username
+  database_password = var.database_password
+  database_name = var.database_name
+  database_dialect = var.database_dialect
+}
+
+resource "aws_ssm_parameter" "DATABASE_HOST" {
+  name  = "DATABASE_HOST"
+  type  = "SecureString"
+  value = local.host
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "DATABASE_USERNAME" {
+  name  = "DATABASE_USERNAME"
+  type  = "SecureString"
+  value = local.database_username
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "DATABASE_PASSWORD" {
+  name  = "DATABASE_PASSWORD"
+  type  = "SecureString"
+  value = local.database_password
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "DATABASE_NAME" {
+  name  = "DATABASE_NAME"
+  type  = "SecureString"
+  value = local.database_name
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "DATABASE_DIALECT" {
+  name  = "DATABASE_DIALECT"
+  type  = "SecureString"
+  value = local.database_dialect
+  overwrite = true
 }
 
 variable "cidr" {
@@ -132,4 +196,16 @@ variable "database_password" {
   type        = string
   description = "Database Password"
   default     = "rootroot"
+}
+
+variable "database_name" {
+  type        = string
+  description = "Database Name"
+  default     = "checkdayclient"
+}
+
+variable "database_dialect" {
+  type        = string
+  description = "Database Dialect"
+  default     = "mysql"
 }

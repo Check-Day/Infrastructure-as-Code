@@ -40,6 +40,24 @@ resource "aws_security_group" "checkday_load_balancer_security_group" {
   }
 }
 
+resource "aws_security_group" "checkday_db_security_group" {
+  name        = "checkday_db_security_group"
+  description = "Database Traffic Management"
+  vpc_id      = aws_vpc.checkday_vpc.id
+
+  ingress {
+    description      = "DB Traffic"
+    from_port        = 3306
+    to_port          = 3306
+    protocol         = "tcp"
+    security_groups  = [aws_security_group.checkday_app_security_group.id]
+  }
+
+  tags = {
+    Name = "checkday_db_security_group"
+  }
+}
+
 resource "aws_security_group" "checkday_app_security_group" {
   name        = "checkday_app_security_group"
   description = "App Traffic Management"
@@ -67,24 +85,6 @@ resource "aws_security_group" "checkday_app_security_group" {
 
   tags = {
     Name = "checkday_app_security_group"
-  }
-}
-
-resource "aws_security_group" "checkday_db_security_group" {
-  name        = "checkday_db_security_group"
-  description = "Database Traffic Management"
-  vpc_id      = aws_vpc.checkday_vpc.id
-
-  ingress {
-    description      = "DB Traffic"
-    from_port        = 3306
-    to_port          = 3306
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.checkday_app_security_group.id]
-  }
-
-  tags = {
-    Name = "checkday_db_security_group"
   }
 }
 
