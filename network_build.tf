@@ -95,7 +95,7 @@ resource "aws_lb_listener" "checkday_load_balancer_target_group_listener" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
@@ -141,4 +141,10 @@ variable "environment" {
   type        = string
   description = "Describes environment"
   default     = "dev"
+}
+
+variable "certificate_arn" {
+  type = string
+  description = "contains certificate arn from aws certifiate manager"
+  default = "arn:aws:acm:us-east-1:467465390813:certificate/4a3b1c6c-ba61-41fc-9e66-bd4697b7d41b"
 }
