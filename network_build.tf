@@ -123,6 +123,7 @@ resource "aws_rds_cluster" "checkday_database" {
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
   final_snapshot_identifier = "checkday-db-final-snapshot-${formatdate("YYYYMMDDHHmmss", timestamp())}"
+  db_subnet_group_name     = aws_db_subnet_group.checkday_db_subnet_group.name
 }
 
 variable "cidr" {
