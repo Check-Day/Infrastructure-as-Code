@@ -25,6 +25,8 @@ resource "aws_subnet" "checkday_private_subnet" {
 
   tags = {
     Name = "checkday_private_subnet_${each.key}"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/demo" = "owned"
   }
 }
 
@@ -38,35 +40,9 @@ resource "aws_subnet" "checkday_public_subnet" {
 
   tags = {
     Name = "checkday_public_subnet_${each.key}"
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/demo" = "owned"
   }
-}
-
-resource "aws_route_table" "checkday_public_routetable" {
-  vpc_id = aws_vpc.checkday_vpc.id
-  tags = {
-    Name = "checkday_public_routetable"
-  }
-}
-
-resource "aws_route_table_association" "checkday_public_routetable_association" {
-  for_each   = aws_subnet.checkday_public_subnet
-
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.checkday_public_routetable.id
-}
-
-resource "aws_route_table" "checkday_private_routetable" {
-  vpc_id = aws_vpc.checkday_vpc.id
-  tags = {
-    Name = "checkday_private_routetable"
-  }
-}
-
-resource "aws_route_table_association" "checkday_private_routetable_association" {
-  for_each   = aws_subnet.checkday_private_subnet
-
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.checkday_private_routetable.id
 }
 
 resource "aws_lb" "checkday_load_balancer" {
