@@ -12,6 +12,10 @@ provider "aws" {
   profile                  = "iac"
 }
 
+provider "kubernetes" {
+  config_path = local_file.kubeconfig.filename
+}
+
 variable "region" {
   type        = string
   default     = "us-east-1"
