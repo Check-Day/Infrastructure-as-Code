@@ -1,4 +1,5 @@
 .env
+queries.txt
 # Local .terraform directories
 **/.terraform/*
 
