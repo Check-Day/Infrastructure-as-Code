@@ -89,17 +89,32 @@ resource "aws_db_subnet_group" "checkday_db_subnet_group" {
 }
 
 resource "aws_rds_cluster" "checkday_database" {
-  cluster_identifier      = "checkday-aurora-db"
-  engine                  = "aurora-mysql"
-  engine_version          = "8.0.mysql_aurora.3.02.0"
-  availability_zones      = var.availability_zones
-  database_name           = var.database_name
-  master_username         = var.database_username
-  master_password         = var.database_password
-  backup_retention_period = 5
-  preferred_backup_window = "07:00-09:00"
+  cluster_identifier       = "checkday-aurora-db"
+  engine                   = "aurora-mysql"
+  engine_version           = "5.7.mysql_aurora.2.11.2"
+  availability_zones       = var.availability_zones
+  database_name            = var.database_name
+  master_username          = var.database_username
+  master_password          = var.database_password
+  backup_retention_period  = 5
+  preferred_backup_window  = "07:00-09:00"
   final_snapshot_identifier = "checkday-db-final-snapshot-${formatdate("YYYYMMDDHHmmss", timestamp())}"
   db_subnet_group_name     = aws_db_subnet_group.checkday_db_subnet_group.name
+}
+
+resource "aws_rds_cluster_instance" "checkday_database_cluster_instance" {
+  apply_immediately  = true
+  cluster_identifier = aws_rds_cluster.checkday_database.id
+  identifier         = "checkday-aurora-db-instance"
+  instance_class     = "db.t2.small"
+  engine             = aws_rds_cluster.checkday_database.engine
+  engine_version     = aws_rds_cluster.checkday_database.engine_version
+}
+
+resource "aws_rds_cluster_endpoint" "checkday_database_cluster_instance_endpoint" {
+  cluster_identifier          = aws_rds_cluster.checkday_database.id
+  cluster_endpoint_identifier = "static"
+  custom_endpoint_type        = "ANY"
 }
 
 variable "cidr" {
