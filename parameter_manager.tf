@@ -1,5 +1,5 @@
 locals {
-  host = aws_rds_cluster.checkday_database.endpoint
+  host = aws_rds_cluster_endpoint.checkday_database_cluster_instance_endpoint.endpoint
   database_username = var.database_username
   database_password = var.database_password
   database_name = var.database_name
