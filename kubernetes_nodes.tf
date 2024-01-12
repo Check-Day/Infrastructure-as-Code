@@ -89,3 +89,56 @@ resource "aws_eks_node_group" "checkday_eks_private_nodes" {
         aws_iam_role_policy_attachment.checkday_AmazonEC2ContainerRegistryReadOnly,
     ]
 }
+
+resource "kubernetes_deployment" "checkday_app" {
+  metadata {
+    name = "checkday-app-deployment"
+    namespace = "default"
+    labels = {
+      app = "checkday-app"
+    }
+  }
+
+  spec {
+    replicas = 4
+
+    selector {
+      match_labels = {
+        app = "checkday-app"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "checkday-app"
+        }
+      }
+
+      spec {
+        image_pull_secrets {
+          name = "checkday-docker-hub-secret"
+        }
+
+        container {
+          name  = "checkday-pod"
+          image = "saitejsunkara/checkday:checkday"
+        }
+
+        affinity {
+          node_affinity {
+            required_during_scheduling_ignored_during_execution {
+              node_selector_term {
+                match_expressions {
+                  key      = "role"
+                  operator = "In"
+                  values   = ["general"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

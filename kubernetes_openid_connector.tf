@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "test_oidc_assume_role_policy" {
         condition {
             test = "StringEquals"
             variable = "${aws_iam_openid_connect_provider.checkday_openid_connector.url}:aud"
-            values = ["system:serviceaccount:default:aws-test"]
+            values = ["system:serviceaccount:default:checkday-k8-account"]
         }
 
         principals {
