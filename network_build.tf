@@ -28,8 +28,6 @@ resource "aws_subnet" "checkday_private_subnet" {
 
   tags = {
     Name = "checkday_private_subnet_${each.key}"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/demo" = "owned"
   }
 }
 
@@ -43,8 +41,6 @@ resource "aws_subnet" "checkday_public_subnet" {
 
   tags = {
     Name = "checkday_public_subnet_${each.key}"
-    "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/demo" = "owned"
   }
 }
 

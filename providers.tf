@@ -12,11 +12,6 @@ provider "aws" {
   profile                  = "iac"
 }
 
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "minikube"
-}
-
 variable "region" {
   type        = string
   default     = "us-east-1"
