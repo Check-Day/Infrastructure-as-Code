@@ -8,7 +8,7 @@ resource "aws_iam_openid_connect_provider" "checkday_openid_connector" {
     url = aws_eks_cluster.checkday_eks_cluster.identity[0].oidc[0].issuer
 }
 
-data "aws_iam_policy_document" "test_oidc_assume_role_policy" {
+data "aws_iam_policy_document" "checkday_oidc_assume_role_policy" {
     statement {
         actions = ["sts:AssumeRoleWithWebIdentity"]
         effect = "Allow"
@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "test_oidc_assume_role_policy" {
         condition {
             test = "StringEquals"
             variable = "${aws_iam_openid_connect_provider.checkday_openid_connector.url}:aud"
-            values = ["system:serviceaccount:default:checkday-k8-account"]
+            values = ["system:serviceaccount:karpenter:checkday-k8-account"]
         }
 
         principals {
@@ -26,28 +26,22 @@ data "aws_iam_policy_document" "test_oidc_assume_role_policy" {
     }
 }
 
-resource "aws_iam_role" "checkday_test_oidc" {
-    assume_role_policy = data.aws_iam_policy_document.test_oidc_assume_role_policy.json
-    name = "checkday_test_oidc"
+resource "aws_iam_role" "checkday_karpenter_controller_role" {
+    assume_role_policy = data.aws_iam_policy_document.checkday_oidc_assume_role_policy.json
+    name = "checkday_karpenter_controller"
 }
 
-resource "aws_iam_policy" "checkday_test_policy" {
-    name = "checkday_test_policy"
-
-    policy = jsonencode({
-        Statement = [{
-            Action = [
-                "s3:ListAllMyBuckets",
-                "s3:GetBucketLocation"
-            ]
-            Effect = "Allow"
-            Resource = "arn:aws:s3:::*"
-        }]
-        Version = "2012-10-17"
-    })
+resource "aws_iam_policy" "karpenter_controller_policy" {
+    policy = file("./karpenter-controller-trust-policy.json")
+    name = "KarpenterController"
 }
 
-resource "aws_iam_role_policy_attachment" "checkday_test_attach" {
-    role = aws_iam_role.checkday_test_oidc.name
-    policy_arn = aws_iam_policy.checkday_test_policy.arn
+resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_attach" {
+    role = aws_iam_role.checkday_karpenter_controller_role.name
+    policy_arn = aws_iam_policy.karpenter_controller_policy.arn
+}
+
+resource "aws_iam_instance_profile" "checkday_karpenter_instance_profile" {
+    name = "KarpenterNodeInstanceProfile"
+    role = aws_iam_role.checkday_node_group_role.name
 }
