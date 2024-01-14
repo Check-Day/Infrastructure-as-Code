@@ -26,6 +26,7 @@ resource "aws_eks_cluster" "checkday_eks_cluster" {
   role_arn = aws_iam_role.checkday_eks_master.arn
 
   vpc_config {
+    endpoint_private_access = true
     subnet_ids = [for subnet in aws_subnet.checkday_private_subnet : subnet.id]
   }
   
