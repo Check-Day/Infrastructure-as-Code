@@ -1,6 +1,3 @@
-.env
-queries.txt
-commands.sh
 # Local .terraform directories
 **/.terraform/*
 

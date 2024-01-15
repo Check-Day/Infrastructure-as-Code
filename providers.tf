@@ -13,8 +13,8 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "minikube"
+  config_path    = "/Users/saitejsunkara/.kube/config"
+  config_context = "arn:aws:eks:us-east-1:467465390813:cluster/checkday_eks_cluster"
 }
 
 variable "region" {
