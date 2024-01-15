@@ -9,7 +9,7 @@ spec:
   ttlSecondsUntilExpired: 604800
   limits:
     resources:
-      cpu: 100
+      cpu: 50
   requirements:
     - key: karpenter.k8s.aws/instance-family
       operator: In
