@@ -47,6 +47,6 @@ resource "aws_iam_role_policy_attachment" "checkday_eks_karpenter_controller_pol
 }
 
 resource "aws_iam_instance_profile" "karpenter" {
-    name = "KarpenterNodeInstanceProfile"
+    name = "CheckdayKarpenterNodeInstanceProfile"
     role = aws_iam_role.checkday_node_group_role.name
 }
