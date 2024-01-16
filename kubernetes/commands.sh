@@ -1,5 +1,6 @@
 kubectl config delete-context arn:aws:eks:us-east-1:467465390813:cluster/checkday_eks_cluster
 aws configure --profile iac
+kubectl rollout restart deployment checkday-app-deployment
 
 aws eks update-kubeconfig --region us-east-1 --name checkday_eks_cluster --profile iac
 kubectl config get-contexts
