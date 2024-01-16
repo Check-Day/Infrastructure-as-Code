@@ -32,11 +32,11 @@ variable "applicationDesiredUrl" {
 variable "dnsName" {
   type        = string
   description = "Describes app port"
-  default     = "a36b2ec827dfd45dc82cf718baa8b70c-283fcebffa2aee90.elb.us-east-1.amazonaws.com"
+  default     = "a46c8eff24d084754baa93c96c6d2d87-366027846.us-east-1.elb.amazonaws.com"
 }
 
 variable "canonicalHostedZoneId" {
   type        = string
   description = "Describes app port"
-  default     = "Z26RNL4JYFTOTI"
+  default     = "Z35SXDOTRQ7X7K"
 }
