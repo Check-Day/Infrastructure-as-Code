@@ -1,9 +1,3 @@
-resource "aws_route" "checkday_public_route_in_public_route_table" {
-  route_table_id         = aws_route_table.checkday_public_routetable.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.checkday_internet_gateway.id
-}
-
 resource "aws_security_group" "checkday_load_balancer_security_group" {
   name        = "checkday_load_balancer_security_group"
   description = "Load Balancer Trafic Management"
@@ -51,6 +45,14 @@ resource "aws_security_group" "checkday_db_security_group" {
     to_port          = 3306
     protocol         = "tcp"
     security_groups  = [aws_security_group.checkday_app_security_group.id]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   tags = {

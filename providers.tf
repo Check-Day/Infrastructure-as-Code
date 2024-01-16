@@ -12,6 +12,11 @@ provider "aws" {
   profile                  = "iac"
 }
 
+provider "kubernetes" {
+  config_path    = "/Users/saitejsunkara/.kube/config"
+  config_context = "arn:aws:eks:us-east-1:467465390813:cluster/checkday_eks_cluster"
+}
+
 variable "region" {
   type        = string
   default     = "us-east-1"

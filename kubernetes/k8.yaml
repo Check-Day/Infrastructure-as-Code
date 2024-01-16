@@ -1,0 +1,33 @@
+# @format
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkday-app-deployment
+  namespace: default
+  labels:
+    app: checkday-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: checkday-app
+  template:
+    metadata:
+      labels:
+        app: checkday-app
+    spec:
+      imagePullSecrets:
+        - name: checkday-docker-hub-secret
+      containers:
+        - name: checkday-pod
+          image: saitejsunkara/checkday:checkday
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: role
+                    operator: In
+                    values:
+                      - general

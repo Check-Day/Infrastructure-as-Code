@@ -1,5 +1,5 @@
 locals {
-  host = aws_rds_cluster.checkday_database.endpoint
+  host = "checkdayclient-test.cf4yygu0ey7t.us-east-1.rds.amazonaws.com" # aws_rds_cluster_instance.checkday_database_cluster_instance.endpoint
   database_username = var.database_username
   database_password = var.database_password
   database_name = var.database_name

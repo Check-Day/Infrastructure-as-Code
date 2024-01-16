@@ -1,0 +1,9 @@
+To export kubernetes config to aws eks
+
+aws eks --region us-east-1 update-kubeconfig --name checkday_eks_cluster
+
+why 3 nat gateways for 3 private subnets? Can't we have 1?
+
+Why is public load balancer internet facing? and why is private load balancer internal facing?
+
+Why no target groups created in Application Load Balancer? And why are they being created in Network Load Balancer in Kubernetes?

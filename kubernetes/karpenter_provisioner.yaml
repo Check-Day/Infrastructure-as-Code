@@ -1,0 +1,31 @@
+# @format
+---
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: karpenter
+spec:
+  ttlSecondsAfterEmpty: 60
+  ttlSecondsUntilExpired: 604800
+  limits:
+    resources:
+      cpu: 50
+  requirements:
+    - key: karpenter.k8s.aws/instance-family
+      operator: In
+      values: [t2, t3, t3a]
+    - key: karpenter.k8s.aws/instance-size
+      operator: In
+      values: [nano, micro, small]
+  providerRef:
+    name: checkday-karpenter-provider
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: checkday-karpenter-provider
+spec:
+  subnetSelector:
+    kubernetes.io/cluster/checkday_eks_cluster: owned
+  securityGroupSelector:
+    kubernetes.io/cluster/checkday_eks_cluster: owned
