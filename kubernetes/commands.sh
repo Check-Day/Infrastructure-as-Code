@@ -38,7 +38,7 @@ kubectl apply -f kubernetes/k8.yaml
 --------------------------
 --------------------------
 --------------------------
-
+# Create SSL request in certificate manager and use it in load balancer
 kubectl apply -f kubernetes/load_balancer.yaml
 
 aws elbv2 describe-load-balancers
