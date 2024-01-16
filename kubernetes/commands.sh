@@ -34,3 +34,14 @@ watch -n 1 -t kubectl get nodes
 kubectl get secrets
 kubectl apply -f kubernetes/k8.yaml
 
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+
+kubectl apply -f kubernetes/load_balancer.yaml
+
+aws elbv2 describe-load-balancers
+aws elbv2 describe-load-balancers --names a36b2ec827dfd45dc82cf718baa8b70c
+
+a_record.tf should be run after creating load balancer with kubectl service
