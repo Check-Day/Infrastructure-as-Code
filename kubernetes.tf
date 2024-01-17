@@ -74,10 +74,10 @@ resource "aws_eks_node_group" "checkday_eks_private_nodes" {
   subnet_ids = [for subnet in aws_subnet.checkday_private_subnet : subnet.id]
 
   capacity_type  = "ON_DEMAND"
-  instance_types = ["t3.small"]
+  instance_types = ["t2.small"]
 
   scaling_config {
-    desired_size = 2
+    desired_size = 1
     max_size     = 7
     min_size     = 1
   }
