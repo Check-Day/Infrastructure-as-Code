@@ -7,3 +7,5 @@ why 3 nat gateways for 3 private subnets? Can't we have 1?
 Why is public load balancer internet facing? and why is private load balancer internal facing?
 
 Why no target groups created in Application Load Balancer? And why are they being created in Network Load Balancer in Kubernetes?
+
+Why can we not give database security group for aurora serverless cluster db? Why is it taking default security groups?
